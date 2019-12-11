@@ -1,9 +1,8 @@
 --- Day 7: Amplification Circuit ---
 
-Based on the navigational maps, you're
-going to need to send more power to your ship's thrusters to reach Santa in
-time. To do this, you'll need to configure a series of amplifiers already
-installed on the ship.
+Based on the navigational maps, you're going to need to send more power to your
+ship's thrusters to reach Santa in time. To do this, you'll need to configure a
+series of amplifiers already installed on the ship.
 
 There are five amplifiers connected in series; each one receives an input
 signal and produces an output signal. They are connected such that the first
