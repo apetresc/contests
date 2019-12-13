@@ -3,8 +3,8 @@ class IntcodeComputer(object):
     def __init__(self, M):
         self.M = list(M)
         self.ip = 0
-        self.input_buffer = ""
-        self.output_buffer = ""
+        self.input_buffer = lambda: (yield input())
+        self.output_buffer = lambda x: print(x)
 
     def extract_param(self, p, pmodes):
         if p > len(pmodes):
@@ -18,11 +18,12 @@ class IntcodeComputer(object):
             return self.M[self.ip + p]
 
     def input(self):
-        self.input_buffer = input()
-        return self.input_buffer
+        i = next(self.input_buffer())
+        print("Got input: %s" % i)
+        return i
 
     def output(self, s):
-        print(s)
+        self.output_buffer(s)
 
     def step(self):
         reg = self.M[self.ip]
@@ -82,8 +83,13 @@ class IntcodeComputer(object):
                 return
 
 
+def simulate_setting(M, p):
+    chain = [IntcodeComputer(M) for _ in p]
+    chain[0].input_buffer = lambda: ((yield 0), (yield p[0]))
+    chain[0].run()
+
+
 if __name__ == "__main__":
     M = list(map(int, input().split(",")))
-    c = IntcodeComputer(M)
-
-    c.run()
+    #simulate_setting(M, [4, 3, 2, 1, 0])
+    IntcodeComputer(M).run()
