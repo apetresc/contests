@@ -1,10 +1,12 @@
+import itertools
+
 class IntcodeComputer(object):
 
-    def __init__(self, M):
+    def __init__(self, M, input_buffer = None):
         self.M = list(M)
         self.ip = 0
-        self.input_buffer = lambda: (yield input())
-        self.output_buffer = lambda x: print(x)
+        self.input_buffer = input_buffer or (lambda: (yield input()))()
+        self.output_buffer = []
 
     def extract_param(self, p, pmodes):
         if p > len(pmodes):
@@ -18,12 +20,10 @@ class IntcodeComputer(object):
             return self.M[self.ip + p]
 
     def input(self):
-        i = next(self.input_buffer())
-        print("Got input: %s" % i)
-        return i
+        return next(self.input_buffer)
 
     def output(self, s):
-        self.output_buffer(s)
+        self.output_buffer.append(s)
 
     def step(self):
         reg = self.M[self.ip]
@@ -84,12 +84,22 @@ class IntcodeComputer(object):
 
 
 def simulate_setting(M, p):
-    chain = [IntcodeComputer(M) for _ in p]
-    chain[0].input_buffer = lambda: ((yield 0), (yield p[0]))
-    chain[0].run()
+    signal = 0
+
+    for phase in p:
+        amp = IntcodeComputer(M, input_buffer=iter([phase, signal]))
+        amp.run()
+        signal = amp.output_buffer[0]
+
+    return signal
 
 
 if __name__ == "__main__":
     M = list(map(int, input().split(",")))
-    #simulate_setting(M, [4, 3, 2, 1, 0])
-    IntcodeComputer(M).run()
+
+    max_signal = 0
+
+    for amp_setting in itertools.permutations(range(5)):
+        max_signal = max(max_signal, simulate_setting(M, amp_setting))
+
+    print(max_signal)
