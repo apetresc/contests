@@ -17,7 +17,11 @@ fn prefix<T: PartialEq>(first_list: &[T], second_list: &[T]) -> bool {
 
 pub fn sublist<T: PartialEq>(first_list: &[T], second_list: &[T]) -> Comparison {
     let swapped = first_list.len() > second_list.len();
-    let (first_list, second_list) = if swapped { (second_list, first_list) } else { (first_list, second_list) };
+    let (first_list, second_list) = if swapped {
+        (second_list, first_list)
+    } else {
+        (first_list, second_list)
+    };
     let offset = second_list.len() - first_list.len();
 
     for i in 0..=offset {
@@ -28,13 +32,13 @@ pub fn sublist<T: PartialEq>(first_list: &[T], second_list: &[T]) -> Comparison 
                 Comparison::Superlist
             } else {
                 Comparison::Sublist
-            }
+            };
         }
     }
 
     if first_list.len() == 0 && second_list.len() == 0 {
         Comparison::Equal
-    } else { 
+    } else {
         Comparison::Unequal
     }
 }
