@@ -67,6 +67,15 @@ fn huge_sublist_not_in_huge_list() {
 }
 
 #[test]
+#[ignore]
+fn huge_sublist_not_in_huge_list_2() {
+    let v1: Vec<u64> = vec![0; 1_000_000];
+    let mut v2: Vec<u64> = vec![0; 500_000];
+    v2.push(1);
+    assert_eq!(Comparison::Unequal, sublist(&v1, &v2));
+}
+
+#[test]
 fn superlist_at_start() {
     assert_eq!(Comparison::Superlist, sublist(&[1, 2, 3, 4, 5], &[1, 2, 3]));
 }
