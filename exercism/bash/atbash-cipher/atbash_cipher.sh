@@ -7,8 +7,9 @@ main() {
 
   for (( i=0; i<${#input}; i++ )); do
     local char="${input:$i:1}"
+    local alphabet="abcdefghijklmnopqrstuvwxyz"
     if [[ $char =~ [a-zA-Z] ]]; then
-      output+=$(printf \\$(printf '%03o' "$(( 219 - $(printf "%d" "'${char,,}") ))"))
+      output+=${alphabet:26-$((${#${alphabet%%${char,,}*}})):1}
     elif [[ $char =~ [0-9] ]]; then
       output+="$char"
     fi
@@ -16,10 +17,10 @@ main() {
 
   case "$command" in
     encode)
-      printf '%s\n' "$output" | fold -w5 | paste -sd' ' -
+      echo $(echo $output | fold -w5)
       ;;
     decode)
-      printf '%s\n' "$output"
+      echo $output
       ;;
     *)
       echo "Invalid command: $command"
