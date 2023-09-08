@@ -1,0 +1,26 @@
+{
+  "blurb": "Translate RNA sequences into proteins.",
+  "authors": [
+    "ricemery"
+  ],
+  "contributors": [
+    "ErikSchierboom",
+    "ppartarr",
+    "rajeshpg"
+  ],
+  "files": {
+    "solution": [
+      "src/main/scala/ProteinTranslation.scala"
+    ],
+    "test": [
+      "src/test/scala/ProteinTranslationTest.scala"
+    ],
+    "example": [
+      ".meta/Example.scala"
+    ],
+    "invalidator": [
+      "build.sbt"
+    ]
+  },
+  "source": "Tyler Long"
+}
