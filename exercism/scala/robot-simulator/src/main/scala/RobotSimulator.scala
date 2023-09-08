@@ -1,29 +1,22 @@
-// Bearing enum
 object Bearing extends Enumeration {
-  type Bearing = Value
-  val North, East, South, West = Value
+  val North = Value(0)
+  val East = Value(1)
+  val South = Value(2)
+  val West = Value(3)
 }
 
-case class Robot(bearing: Bearing.Bearing, coordinates: (Int, Int)) {
-  def turnRight: Robot = bearing match {
-    case Bearing.North => this.copy(bearing = Bearing.East)
-    case Bearing.East => this.copy(bearing = Bearing.South)
-    case Bearing.South => this.copy(bearing = Bearing.West)
-    case Bearing.West => this.copy(bearing = Bearing.North)
-  }
+case class Robot(bearing: Bearing.Value, coordinates: (Int, Int)) {
+  def turnRight: Robot = this.copy(bearing = Bearing.apply((bearing.id + 1) % 4))
+  def turnLeft: Robot = this.copy(bearing = Bearing.apply((bearing.id + 3) % 4))
 
-  def turnLeft: Robot = bearing match {
-    case Bearing.North => this.copy(bearing = Bearing.West)
-    case Bearing.East => this.copy(bearing = Bearing.North)
-    case Bearing.South => this.copy(bearing = Bearing.East)
-    case Bearing.West => this.copy(bearing = Bearing.South)
-  }
-
-  def advance: Robot = bearing match {
-    case Bearing.North => this.copy(coordinates = (coordinates._1, coordinates._2 + 1))
-    case Bearing.East => this.copy(coordinates = (coordinates._1 + 1, coordinates._2))
-    case Bearing.South => this.copy(coordinates = (coordinates._1, coordinates._2 - 1))
-    case Bearing.West => this.copy(coordinates = (coordinates._1 - 1, coordinates._2))
+  def advance: Robot = {
+    val (x, y) = coordinates
+    bearing match {
+      case Bearing.North => this.copy(coordinates = (x, y + 1))
+      case Bearing.East => this.copy(coordinates = (x + 1, y))
+      case Bearing.South => this.copy(coordinates = (x, y - 1))
+      case Bearing.West => this.copy(coordinates = (x - 1, y))
+    }
   }
 
   def simulate(instructions: String): Robot = instructions.foldLeft(this) {
