@@ -9,122 +9,86 @@ struct list_node {
 
 struct list {
   struct list_node *first, *last;
+  size_t size;
 };
 
 struct list *list_create(void) {
-  // Allocate a list_node
-  struct list *list = malloc(sizeof(struct list));
-
+  struct list *list = malloc(sizeof(*list));
+  list->first = list->last = NULL;
+  list->size = 0;
   return list;
 }
 
+static struct list_node *node_create(ll_data_t data, struct list_node *prev,
+                                     struct list_node *next) {
+  struct list_node *node = malloc(sizeof(*node));
+  node->data = data;
+  node->prev = prev;
+  node->next = next;
+  return node;
+}
+
+static ll_data_t node_delete(struct list *list, struct list_node *node) {
+  ll_data_t data = node->data;
+  if (node->prev == NULL) {
+    list->first = node->next;
+  } else {
+    node->prev->next = node->next;
+  }
+  if (node->next == NULL) {
+    list->last = node->prev;
+  } else {
+    node->next->prev = node->prev;
+  }
+  free(node);
+  list->size--;
+  return data;
+}
+
 void list_destroy(struct list *list) {
-  // Free all the nodes
-  struct list_node *node = list->first;
-  while (node != NULL) {
-    struct list_node *next = node->next;
+  for (struct list_node *node = list->first, *next; node != NULL; node = next) {
+    next = node->next;
     free(node);
-    node = next;
   }
 
-  // Free the list
   free(list);
 }
 
-size_t list_count(const struct list *list) {
-  size_t size = 0;
-  struct list_node *node = list->first;
-
-  while (node != NULL) {
-    size++;
-    node = node->next;
-  }
-
-  return size;
-}
+size_t list_count(const struct list *list) { return list->size; }
 
 void list_push(struct list *list, ll_data_t item_data) {
-  // Allocate a new node
-  struct list_node *node = malloc(sizeof(struct list_node));
-  node->data = item_data;
-
-  // Add it to the end of the list
-  node->prev = list->last;
-  node->next = NULL;
-  if (list->last != NULL) {
-    list->last->next = node;
-  }
+  struct list_node *node = node_create(item_data, list->last, NULL);
+  list->size > 0 ? (list->last->next = node) : (list->first = node);
   list->last = node;
-
-  // If the list was empty, set the first node
-  if (list->first == NULL) {
-    list->first = node;
-  }
+  list->size++;
 }
 
 ll_data_t list_pop(struct list *list) {
-  // Get the last node
-  struct list_node *node = list->last;
-  if (node == NULL) {
+  if (list->size == 0) {
     return 0;
   }
-
-  // Remove it from the list
-  list->last = node->prev;
-  if (list->last != NULL) {
-    list->last->next = NULL;
-  }
-  if (node == list->first) {
-    list->first = NULL;
-  }
-
-  ll_data_t data = node->data;
-  free(node);
-
-  return data;
+  return node_delete(list, list->last);
 }
 
 void list_unshift(struct list *list, ll_data_t item_data) {
-  struct list_node *node = malloc(sizeof(struct list_node));
-  node->data = item_data;
-  node->prev = NULL;
-  node->next = list->first;
-
+  struct list_node *node = node_create(item_data, NULL, list->first);
+  list->size > 0 ? (list->first->prev = node) : (list->last = node);
   list->first = node;
+  list->size++;
 }
 
-// removes item from front of a list
 ll_data_t list_shift(struct list *list) {
-  struct list_node *node = list->first;
-  ll_data_t data = node->data;
-  list->first = node->next;
-  if (list->first != NULL) {
-    list->first->prev = NULL;
-  } else {
-    list->last = NULL;
+  if (list->size == 0) {
+    return 0;
   }
-  free(node);
-  return data;
+  return node_delete(list, list->first);
 }
 
 void list_delete(struct list *list, ll_data_t data) {
-  struct list_node *node = list->first;
-
-  while (node != NULL) {
+  for (struct list_node *node = list->first; node != NULL; node = node->next) {
     if (node->data == data) {
-      if (node->prev == NULL) {
-        list->first = node->next;
-      } else {
-        node->prev->next = node->next;
-      }
-      if (node->next == NULL) {
-        list->last = node->prev;
-      } else {
-        node->next->prev = node->prev;
-      }
-      free(node);
+      node_delete(list, node);
       return;
     }
-    node = node->next;
   }
 }
