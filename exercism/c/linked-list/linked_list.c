@@ -1,5 +1,6 @@
 #include "linked_list.h"
 
+#include <assert.h>
 #include <stdlib.h>
 
 struct list_node {
@@ -64,9 +65,7 @@ void list_push(struct list *list, ll_data_t item_data) {
 }
 
 ll_data_t list_pop(struct list *list) {
-  if (list->size == 0) {
-    return 0;
-  }
+  assert(list->size > 0);
   return node_delete(list, list->last);
 }
 
@@ -78,9 +77,7 @@ void list_unshift(struct list *list, ll_data_t item_data) {
 }
 
 ll_data_t list_shift(struct list *list) {
-  if (list->size == 0) {
-    return 0;
-  }
+  assert(list->size > 0);
   return node_delete(list, list->first);
 }
 
