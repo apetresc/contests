@@ -69,3 +69,8 @@ fn underscore_emphasis() {
     let expected = "TRNT";
     assert_eq!(output, expected);
 }
+
+#[test]
+fn camelcase() {
+    assert_eq!(acronym::abbreviate("HyperText Markup Language"), "HTML");
+}
