@@ -1,0 +1,34 @@
+{
+  "authors": [
+    "rubysolo"
+  ],
+  "contributors": [
+    "AndreaCrotti",
+    "canweriotnow",
+    "dkinzer",
+    "haus",
+    "jgwhite",
+    "kytrinyx",
+    "mathias",
+    "michalporeba",
+    "ovidiu141",
+    "sjwarner-bp",
+    "verdammelt",
+    "walkermatt",
+    "yurrriq"
+  ],
+  "files": {
+    "solution": [
+      "src/leap.clj"
+    ],
+    "test": [
+      "test/leap_test.clj"
+    ],
+    "example": [
+      ".meta/src/example.clj"
+    ]
+  },
+  "blurb": "Determine whether a given year is a leap year.",
+  "source": "CodeRanch Cattle Drive, Assignment 3",
+  "source_url": "https://coderanch.com/t/718816/Leap"
+}
