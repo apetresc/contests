@@ -1,0 +1,19 @@
+{
+  "authors": [
+    "TheLostLambda",
+    "verdammelt"
+  ],
+  "files": {
+    "solution": [
+      "pizza-pi.lisp"
+    ],
+    "test": [
+      "pizza-pi-test.lisp"
+    ],
+    "exemplar": [
+      ".meta/exemplar.lisp"
+    ]
+  },
+  "icon": "lasagna",
+  "blurb": "Learn about arithmetic with integers and floating-point numbers by helping to make pizza."
+}

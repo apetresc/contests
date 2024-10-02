@@ -1,0 +1,21 @@
+{
+  "authors": [
+    "verdammelt"
+  ],
+  "files": {
+    "solution": [
+      "lillys-lasagna.lisp"
+    ],
+    "test": [
+      "lillys-lasagna-test.lisp"
+    ],
+    "exemplar": [
+      ".meta/exemplar.lisp"
+    ]
+  },
+  "forked_from": [
+    "ruby/lasagna"
+  ],
+  "icon": "lasagna",
+  "blurb": "Learn about functions by helping to cook lasagna."
+}

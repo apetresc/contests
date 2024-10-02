@@ -1,0 +1,19 @@
+{
+  "authors": [
+    "verdammelt"
+  ],
+  "files": {
+    "solution": [
+      "leap.lisp"
+    ],
+    "test": [
+      "leap-test.lisp"
+    ],
+    "example": [
+      ".meta/example.lisp"
+    ]
+  },
+  "blurb": "Determine whether a given year is a leap year.",
+  "source": "CodeRanch Cattle Drive, Assignment 3",
+  "source_url": "https://coderanch.com/t/718816/Leap"
+}
