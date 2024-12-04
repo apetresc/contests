@@ -7,8 +7,8 @@ def check_dir(
 ) -> bool:
     if grid[x][y] != target[0]:
         return False
-    if ((x + (len(target) - 1) * dx) not in range(len(grid))) or (
-        (y + (len(target) - 1) * dy) not in range(len(grid[0]))
+    if (x + (len(target) - 1) * dx not in range(len(grid))) or (
+        y + (len(target) - 1) * dy not in range(len(grid[0]))
     ):
         return False
     return "".join([grid[x + dx * i][y + dy * i] for i in range(len(target))]) == target
