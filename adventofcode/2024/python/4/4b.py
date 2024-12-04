@@ -3,23 +3,19 @@ from itertools import product
 
 
 def check_dir(
-    grid: list[list[str]], target: str, x: int, y: int, xd: int, yd: int
+    grid: list[list[str]], target: str, x: int, y: int, dx: int, dy: int
 ) -> bool:
     l = len(target) // 2
-    if not ((l <= x < len(grid) - l) and (l <= y < len(grid[x]) - l)):
+    if not ((l <= x < len(grid) - l) and (l <= y < len(grid[0]) - l)):
         return False
-    if "".join([grid[x + xd * i][y + yd * i] for i in range(-l, l + 1)]) == target:
-        return True
-    return False
+    return "".join([grid[x + dx * i][y + dy * i] for i in range(-l, l + 1)]) == target
 
 
 def check(grid: list[list[str]], target: str, x: int, y: int) -> int:
     return (
         sum(
-            [
-                check_dir(grid, target, x, y, xd, yd)
-                for (xd, yd) in product([1, -1], repeat=2)
-            ]
+            check_dir(grid, target, x, y, dx, dy)
+            for (dx, dy) in product([1, -1], repeat=2)
         )
         >= 2
     )
@@ -28,11 +24,9 @@ def check(grid: list[list[str]], target: str, x: int, y: int) -> int:
 def search(grid: list[list[str]], target: str) -> int:
     if len(target) % 2 != 1:
         return 0
-    total = 0
-    for x in range(len(grid)):
-        for y in range(len(grid[x])):
-            total += check(grid, target, x, y)
-    return total
+    return sum(
+        check(grid, target, x, y) for x in range(len(grid)) for y in range(len(grid[0]))
+    )
 
 
 def main():
