@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Generic, TypeVar
+from typing import Generic, Optional, TypeVar
 
 T = TypeVar("T")
 
@@ -56,6 +56,16 @@ class Grid(Generic[T]):
         for r in range(len(self.grid)):
             s += "".join([str(c) for c in self.grid[r]]) + "\n"
         return s
+
+    def show(self, markers: Optional[dict[Pos, str]] = None) -> None:
+        for y in range(self.h - 1, -1, -1):
+            for x in range(self.w):
+                pos = Pos(x, y)
+                if markers and pos in markers:
+                    print(markers[pos], end="")
+                else:
+                    print(self[pos], end="")
+            print("")
 
     def find(self, val: T) -> list[Pos]:
         p = []
