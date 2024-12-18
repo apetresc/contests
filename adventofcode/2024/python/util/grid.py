@@ -15,7 +15,7 @@ class Pos:
         if isinstance(other, Pos):
             return Pos(self.x + other.x, self.y + other.y)
         elif isinstance(other, tuple):
-            return Pos(self.x + other[0], self.y + other[0])
+            return Pos(self.x + other[0], self.y + other[1])
 
     def to(self, other: Pos) -> list[Pos]:
         """
