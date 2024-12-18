@@ -1,0 +1,16 @@
+Register A: 44374556
+Register B: 0
+Register C: 0
+
+Program: 2,4,1,5,7,5,1,6,0,3,4,1,5,5,3,0
+
+
+
+00:  2 (4) # B := A % 8    
+02:  1 (5) # B := B XOR 5  
+04:  7 (5) # C := A >> B 
+06:  1 (6) # B := B XOR 6  
+08:  0 (3) # A := A >> 3   
+10:  4 (1) # B := B XOR C  
+12:  5 (5) # PRINT B % 8   
+14:  3 (0) # JUMP 0 (UNLESS A = 0)
