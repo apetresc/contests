@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Generic, Optional, TypeVar
+from typing import Generic, Iterable, Optional, TypeVar, cast, overload
 
 T = TypeVar("T")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Pos:
     x: int
     y: int
@@ -31,18 +31,54 @@ class Pos:
 
 class Grid(Generic[T]):
 
-    def __init__(self, grid: list[list[T]]):
-        self.grid = grid
-        self.h = len(grid)
-        self.w = len(grid[0])
+    def __init__(
+        self,
+        grid: Optional[Iterable[Iterable[T]]] = None,
+        h: Optional[int] = None,
+        w: Optional[int] = None,
+        default_value: Optional[T] = None,
+    ):
+        if grid:
+            self.grid = [list(row) for row in grid]
+            self.h = len(self.grid)
+            self.w = len(self.grid[0])
+        elif h and w and default_value:
+            self.h = h
+            self.w = w
+            self.grid = [[default_value for _ in range(w)] for _ in range(h)]
 
     def __check_bounds__(self, pos: Pos) -> None:
         if not (0 <= pos.x < self.w and 0 <= pos.y < self.h):
             raise IndexError("Position {pos} out of bounds", pos)
 
-    def __getitem__(self, pos: Pos) -> T:
-        self.__check_bounds__(pos)
-        return self.grid[self.h - pos.y - 1][pos.x]
+    @overload
+    def __getitem__(self, key: Pos) -> T: ...
+    @overload
+    def __getitem__(self, key: tuple[slice | int, slice | int]) -> Grid[T]: ...
+
+    def __getitem__(self, key: Pos | tuple[slice | int, slice | int]) -> T | Grid[T]:
+        if isinstance(key, Pos):
+            pos = cast(Pos, key)
+            self.__check_bounds__(pos)
+            return self.grid[self.h - pos.y - 1][pos.x]
+        elif (
+            isinstance(key, tuple)
+            and isinstance(key[0], slice | int)
+            and isinstance(key[1], slice | int)
+        ):
+            hs = key[0]
+            if isinstance(hs, int):
+                hs = slice(hs, hs + 1, 1)
+            if isinstance(key[1], int):
+                vs = slice(key[1], key[1] + 1, 1)
+            else:
+                vs = slice(key[1].start or 0, key[1].stop or self.h - 1, key[1].step)
+
+            return Grid(
+                row[hs.start : hs.stop : hs.step]
+                for row in self.grid[self.h - vs.stop : self.h - vs.start : vs.step]
+            )
+        raise TypeError("Unexpected slice type", type(slice))
 
     def __setitem__(self, pos: Pos, val: T) -> None:
         self.__check_bounds__(pos)
@@ -97,3 +133,21 @@ class Grid(Generic[T]):
                     q.append(npos)
 
         return region
+
+
+# TESTS
+
+
+def test_grid_slicing():
+    grid = Grid(
+        map(lambda x: chr(ord("a") + x), range(i, i + 10)) for i in range(5, 15)
+    )
+    grid.show()
+    print("========")
+    grid[1:3, 2:5].show()
+    print("========")
+    grid[3, 0:2].show()
+    print("========")
+    grid[-1:-4:-1, 2].show()
+    print("========")
+    grid[1:, 1:].show()
